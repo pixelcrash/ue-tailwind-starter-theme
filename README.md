@@ -5,12 +5,20 @@ This theme is based on a custom block design using the flexible fields from ACF
 
 ## BEM Naming Structure
 
-### Main Elmente <section class="section-name"></section>
+### Main Elemente <section class="section-name"></section>
 
 .section-name
 
 **Sub-Elements Level 1**
-.section-name**title, .section-name**content, .section-name\_\_card
 
-**Sub-Elements Level 2**  
-.section-name**card**title, .section-name**card**thumbnail, .section-name**card**content, .section-name**card**button
+- .section-name__title
+- .section-name__content
+- .section-name__content--alternative
+- .section-name__cards (div wrapper)
+- .section-name__card (single div inside wrapper)
+
+**Sub-Elements Level 2 f.e. Cards**
+
+- .section-name__card__thumbnail  
+- .section-name__card__content  
+- .section-name__card__button  
