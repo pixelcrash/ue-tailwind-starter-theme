@@ -10,24 +10,28 @@
     =============================
     */
 
-  var File_Name = "ue-theme-template.zip";
-
+  var File_Name = 'html-startup.zip';
   var CSS_Files = [
-    "./app/libs/custom.css"
+    './makeup/makeup.css',
   ];
   var JS_Files = [
-    "./magic/app.js"
+    './node_modules/jquery/dist/jquery.min.js',
+    './magic/app.js',
   ];
+
   var Production_CSS_Files = [
-    "./dist/production/assets/css/swiper-bundle.min.css"
+    './dist/production/makeup/tailwind.min.css',
+    './dist/production/makeup/makeup.css'
   ];
   var Production_JS_Files = [
-    "./dist/production/assets/js/app.js"
+    './dist/production/magic/jquery.min.js',
+    './dist/production/magic/app.js'
   ];
+
 
   /*
 =============================
-	Include Gulp & Plugins
+  Include Gulp & Plugins
 =============================
 */
   const gulp = require("gulp"),
@@ -53,7 +57,7 @@
     runSequence = require("run-sequence"),
     inject = require("gulp-inject"),
     postcss = require("gulp-postcss");
-    
+
   const sass = require("gulp-sass")(require("sass"));
 
   gulp.task("clean", function () {
@@ -64,7 +68,7 @@
   gulp.task("copy_css_files", function (done) {
     return gulp
       .src(CSS_Files)
-      .pipe(gulp.dest("./dist/production/assets/css"))
+      .pipe(gulp.dest("./dist/production/makeup"))
       .pipe(size());
     done();
   });
@@ -83,7 +87,7 @@
   gulp.task("copy_js_files", function (done) {
     return gulp
       .src(JS_Files)
-      .pipe(gulp.dest("./dist/production/assets/js"))
+      .pipe(gulp.dest("./dist/production/magic"))
       .pipe(size());
 
     done();
@@ -142,9 +146,9 @@
     return gulp
       .src("./dist/production/*.html")
       .pipe(
-        replace('<link rel="stylesheet" href="assets/css/app.min.css">', "")
+        replace('<link rel="stylesheet" href="makeup/app.min.css">', "")
       )
-      .pipe(replace('<script src="assets/js/build.min.js"></script>', ""))
+      .pipe(replace('<script src="magic/build.min.js"></script>', ""))
       .pipe(gulp.dest("./dist/production"));
   });
   gulp.task("production-zip", function (done) {
@@ -158,7 +162,7 @@
 
   gulp.task("sass", function (done) {
     return gulp
-      .src("./assets/scss/*.scss")
+      .src("./makeup/src/*.scss")
       .pipe(
         plumber({
           // errorHandler: onError
@@ -166,7 +170,7 @@
       )
       .pipe(sass())
       .pipe(autoprefixer())
-      .pipe(gulp.dest("./assets/css"))
+      .pipe(gulp.dest("./makeup"))
       .pipe(cleanCSS())
       .pipe(size());
     done();
@@ -177,7 +181,7 @@
       .src("./node_modules/tailwindcss/tailwind.css")
       .pipe(postcss())
       .pipe(concat("tailwind.css"))
-      .pipe(gulp.dest("./assets/css"))
+      .pipe(gulp.dest("./makeup"))
       .pipe(
         rename({
           suffix: ".min",
@@ -189,20 +193,19 @@
           cascade: false,
         })
       )
-      .pipe(gulp.dest("./assets/css"))
+      .pipe(gulp.dest("./makeup"))
       .pipe(size());
     done();
   });
-  gulp.task("output", function (done) {
+  gulp.task("makeup", function (done) {
     return gulp
       .src([
         "./node_modules/tailwindcss/tailwind.css",
-        "./assets/css/custom.css",
-        "./assets/css/page-preview.css",
+        "./makeup/makeup.css",
       ])
       .pipe(postcss())
-      .pipe(concat("output.css"))
-      .pipe(gulp.dest("./"))
+      .pipe(concat("makeup.css"))
+      .pipe(gulp.dest("./makeup"))
       .pipe(cleanCSS())
       .pipe(
         autoprefixer({
@@ -224,7 +227,7 @@
         })
       )
       .pipe(terser())
-      .pipe(gulp.dest("./assets/js"))
+      .pipe(gulp.dest("./magic"))
       .pipe(size());
     done();
   });
@@ -244,7 +247,7 @@
           suffix: ".min",
         })
       )
-      .pipe(gulp.dest("./assets/css"))
+      .pipe(gulp.dest("./makeup"))
       .pipe(size());
     done();
   });
@@ -265,17 +268,18 @@
       .pipe(zip("dev-" + File_Name))
       .pipe(gulp.dest("dist"))
       .pipe(size());
-    done();
+    done(); 
   });
   gulp.task("watch", function () {
     gulp.watch("tailwind.config.js", gulp.series("build"));
-    gulp.watch(["./assets/js/app.js"], gulp.series("js"));
-    gulp.watch("./**/*.scss", gulp.series("build_css"));
-    gulp.watch("./**/*.html", gulp.series("build_css"));
-    gulp.watch("./**/*.php", gulp.series("build_css"));
+    gulp.watch(["./**/app.js"], gulp.series("build"));
+    gulp.watch("./**/*.scss", gulp.series("build"));
+    gulp.watch("./**/*.html", gulp.series("build"));
+    gulp.watch("./*.html", gulp.series("build"));
+    gulp.watch("./**/*.php", gulp.series("build"));
+    gulp.watch("./*.php", gulp.series("build"));
   });
-  gulp.task("build_css", gulp.series("sass", "tw", "output", "app_css"));
-  gulp.task("build", gulp.series("build_css", "js"));
+  gulp.task("build", gulp.series("sass", "tw", "makeup", "app_css", "js"));
   gulp.task(
     "production",
     gulp.series(

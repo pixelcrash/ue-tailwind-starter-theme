@@ -1,16 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-// in Vars we should put all the variables 
-@import "vars.scss";
-// Set all the typography stuff h1, h2, h3, h4 
-@import "typography.scss";
-@import "theme-styles";
-
-
 // Import Modules
-@import "modules/ue-grid-projects";
-@import "modules/ue-grid-projects";
-@import "modules/ue-grid-projects";
-@import "modules/ue-grid-projects";
+@import "modules/ue-grid-news"; 
+@import "modules/ue-grid-projects";  
